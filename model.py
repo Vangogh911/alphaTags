@@ -1,5 +1,5 @@
-ai_dt_params = ["iCmd", "iEUMax", "iEUMin", "iEUSim", "iLimAH", "iLimWH", "iLimWL", "iLimAL", "iRawValue", "qEU",
-                "qStateHMI", "qMode"]
+ai_dt_params = ["iCmd", "iEUMax", "iEUMin", "iEUSim", "iLimAH", "iLimWH", "iLimWL", "iLimAL", "iRawValue", "qAH",
+                "qWH", "qWL", "qAL", "qRawOver", "qRawUnder", "qStateHMI", "qEU", "qMode"]
 dx_dt_params = ["iIn", "iInv", "qOut", "iSim_En", "iSim_Value", "iTime_On", "iTime_Off"]
 
 
@@ -9,7 +9,10 @@ def ai_modules():
             for j in range(16):
                 for k in range(len(ai_dt_params)):
                     code.write(f'  <item Binding = "Introduced">\n')
-                    code.write(f'    <node-path>PLC.AI.Module_{i+1}.AI{j+1}._AIPresets.{ai_dt_params[k]}</node-path>\n')
+                    if ai_dt_params[k][0] == "i":
+                        code.write(f'    <node-path>PLC.AI.Module_{i+1}.AI{j+1}._AIPresets.{ai_dt_params[k]}</node-path>\n')
+                    else:
+                        code.write(f'    <node-path>PLC.AI.Module_{i + 1}.AI{j + 1}._AIState.{ai_dt_params[k]}</node-path>\n')
                     code.write(f'    <namespace>CODESYSSPV3/3S/IecVarAccess</namespace>\n')
                     code.write(f'    <nodeIdType>String</nodeIdType>\n')
                     code.write(f'    <nodeId>Application.DB_sig.AI.AI[{j+(i*16)}].{ai_dt_params[k]}</nodeId>\n')
